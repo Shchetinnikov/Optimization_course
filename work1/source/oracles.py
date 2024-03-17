@@ -88,12 +88,10 @@ class LogRegL2Oracle(BaseSmoothOracle):
 
     def func(self, x):
         logadd = np.logaddexp(0, - self.b * self.matvec_Ax(x))
-        res = np.linalg.norm(logadd, 1) / self.b.size +\
-              np.linalg.norm(x, 2) ** 2 * self.regcoef / 2
-        return res
+        return np.linalg.norm(logadd, 1) / self.b.size + np.linalg.norm(x, 2) ** 2 * self.regcoef / 2
 
     def grad(self, x):
-        return self.regcoef * x - self.matvec_ATx(self.b * (expit(-self.b * self.matvec_Ax(x)))) / self.b.size
+        return  (-1) * self.matvec_ATx(self.b * (expit(-self.b * self.matvec_Ax(x)))) / self.b.size + self.regcoef * x
 
     def hess(self, x):
         tmp = expit(self.b * self.matvec_Ax(x))
